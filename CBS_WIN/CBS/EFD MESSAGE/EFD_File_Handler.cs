@@ -18,8 +18,8 @@ namespace CBS
 			// Pass in stream reader and initialise new
 			// EFD message. 
 			EFD_Msg EDF_MESSAGE = new EFD_Msg(MyStreamReader);
-
-			// Generate output
+            
+            // Generate output
 			Generate_Output.Generate(EDF_MESSAGE);
 
 			// Once done with the file, 

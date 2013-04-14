@@ -89,6 +89,7 @@
             this.Controls.Add(this.btnDebug);
             this.Name = "MAIN";
             this.Text = "MAIN";
+            this.Load += new System.EventHandler(this.MAIN_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

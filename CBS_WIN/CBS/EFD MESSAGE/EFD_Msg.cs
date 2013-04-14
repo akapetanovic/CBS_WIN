@@ -8,7 +8,7 @@ namespace CBS
 		// These are derived data from the
 		// EFD messages 
 		public string IFPLID;
-		public string CALLSIGN;
+		public string ACID;
 		public string ADEP;
 		public string ADES;
 		public string EOBT;
@@ -56,10 +56,10 @@ namespace CBS
 					IFPLID = Words [1];
 					break;
 				case "-ARCID":
-					CALLSIGN = Words [1];
+					ACID = Words [1];
 					break;
 				case "-ADEP":
-					CALLSIGN = Words [1];
+					ADEP = Words [1];
 					break;
 				case "-ADES":
 					ADES = Words [1];

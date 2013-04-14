@@ -46,24 +46,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DATA OUTPUT\Generate_Output.cs" />
-    <Compile Include="EFD MESSAGE\EFD_File_Handler.cs" />
-    <Compile Include="EFD MESSAGE\EFD_Msg.cs" />
-    <Compile Include="File Watcher\FileWatcher.cs" />
-    <Compile Include="GeoCordSystem.cs" />
+    <Compile Include="CBS\CBS_Common.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\Common.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\EFD.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\Status.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate_Output.cs" />
+    <Compile Include="CBS\EFD MESSAGE\EFD_File_Handler.cs" />
+    <Compile Include="CBS\EFD MESSAGE\EFD_Msg.cs" />
+    <Compile Include="CBS\File Watcher\FileWatcher.cs" />
+    <Compile Include="CBS\GeoCordSystem.cs" />
     <Compile Include="MAIN.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MAIN.Designer.cs">
       <DependentUpon>MAIN.cs</DependentUpon>
     </Compile>
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\Angle.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\Ellipsoid.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\GeodeticCalculator.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\GeodeticCurve.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\GeodeticMeasurement.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\GlobalCoordinates.cs" />
-    <Compile Include="MIKE GAVANGHAN - GEODETIC\GlobalPosition.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\Angle.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\Ellipsoid.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\GeodeticCalculator.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\GeodeticCurve.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\GeodeticMeasurement.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\GlobalCoordinates.cs" />
+    <Compile Include="CBS\MIKE GAVANGHAN - GEODETIC\GlobalPosition.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MAIN.resx">

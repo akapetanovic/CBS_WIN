@@ -22,12 +22,20 @@ namespace CBS_WIN
         {
             StreamReader MyStreamReader;
 
-            string File_Name = @"C:\CBS\test.log";
+            string File_Name = CBS_Common.Source_Path + "test.log";
             MyStreamReader = System.IO.File.OpenText(File_Name);
 
             // Pass in stream reader and initialise new
             // EFD message. 
             EFD_Msg EDF_MESSAGE = new EFD_Msg(MyStreamReader);
+
+            // Generate output
+            Generate_Output.Generate(EDF_MESSAGE);
+        }
+
+        private void MAIN_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
