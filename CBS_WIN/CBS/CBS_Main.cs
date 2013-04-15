@@ -84,6 +84,11 @@ namespace CBS
 
         }
 
+        public static string Get_APP_Settings_Path()
+        {
+            return App_Settings_Path;
+        }
+
         public static void Initialize()
         {
             /////////////////////////////////////////////////////////////////

@@ -31,6 +31,8 @@ namespace CBS_WIN
 
             // Generate output
             Generate_Output.Generate(EDF_MESSAGE);
+
+           // FIX_TO_LATLNG.FIXPOINT_TYPE T = FIX_TO_LATLNG.Get_LATLNG("ADABI");
         }
 
         private void MAIN_Load(object sender, EventArgs e)

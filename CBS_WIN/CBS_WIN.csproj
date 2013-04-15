@@ -62,6 +62,7 @@
     <Compile Include="CBS\EFD MESSAGE\EFD_File_Handler.cs" />
     <Compile Include="CBS\EFD MESSAGE\EFD_Msg.cs" />
     <Compile Include="CBS\File Watcher\FileWatcher.cs" />
+    <Compile Include="CBS\FIX_TO_LATLNG.cs" />
     <Compile Include="CBS\GeoCordSystem.cs" />
     <Compile Include="MAIN.cs">
       <SubType>Form</SubType>
