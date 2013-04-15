@@ -22,7 +22,7 @@ namespace CBS_WIN
         {
             StreamReader MyStreamReader;
 
-            string File_Name = CBS_Common.Source_Path + "test.log";
+            string File_Name = CBS_Common.Get_Source_Dir() + "test.log";
             MyStreamReader = System.IO.File.OpenText(File_Name);
 
             // Pass in stream reader and initialise new
@@ -35,7 +35,20 @@ namespace CBS_WIN
 
         private void MAIN_Load(object sender, EventArgs e)
         {
+            ////////////////////////////////////////////////////////////////////////////
+            // These calls are to be executed in the following order and
+            // are not to be changed
+            CBS_Common.Initialize();
+            this.textBoxSourceDirectory.Text = CBS_Common.Get_Source_Dir();
+            this.textBoxDestinationDirectory.Text = CBS_Common.Get_Destination_Dir();
+            ///////////////////////////////////////////////////////////////////////////
 
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CBS_Common.SetSourceAndDestinationPaths(this.textBoxSourceDirectory.Text, this.textBoxDestinationDirectory.Text);
+            CBS_Common.SaveSettings();
         }
     }
 }

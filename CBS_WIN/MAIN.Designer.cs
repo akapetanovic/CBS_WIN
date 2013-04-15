@@ -33,11 +33,12 @@
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxSourceDirectory = new System.Windows.Forms.TextBox();
             this.textBoxDestinationDirectory = new System.Windows.Forms.TextBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnDebug
             // 
-            this.btnDebug.Location = new System.Drawing.Point(12, 100);
+            this.btnDebug.Location = new System.Drawing.Point(342, 137);
             this.btnDebug.Name = "btnDebug";
             this.btnDebug.Size = new System.Drawing.Size(75, 23);
             this.btnDebug.TabIndex = 1;
@@ -67,21 +68,32 @@
             // 
             this.textBoxSourceDirectory.Location = new System.Drawing.Point(12, 29);
             this.textBoxSourceDirectory.Name = "textBoxSourceDirectory";
-            this.textBoxSourceDirectory.Size = new System.Drawing.Size(208, 20);
+            this.textBoxSourceDirectory.Size = new System.Drawing.Size(405, 20);
             this.textBoxSourceDirectory.TabIndex = 4;
             // 
             // textBoxDestinationDirectory
             // 
             this.textBoxDestinationDirectory.Location = new System.Drawing.Point(12, 77);
             this.textBoxDestinationDirectory.Name = "textBoxDestinationDirectory";
-            this.textBoxDestinationDirectory.Size = new System.Drawing.Size(208, 20);
+            this.textBoxDestinationDirectory.Size = new System.Drawing.Size(405, 20);
             this.textBoxDestinationDirectory.TabIndex = 5;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(12, 137);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 6;
+            this.button1.Text = "Save";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // MAIN
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(237, 135);
+            this.ClientSize = new System.Drawing.Size(432, 172);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDestinationDirectory);
             this.Controls.Add(this.textBoxSourceDirectory);
             this.Controls.Add(this.label2);
@@ -102,6 +114,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxSourceDirectory;
         private System.Windows.Forms.TextBox textBoxDestinationDirectory;
+        private System.Windows.Forms.Button button1;
     }
 }
 
