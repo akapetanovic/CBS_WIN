@@ -25,7 +25,7 @@ namespace CBS
                 Directory.CreateDirectory(Path.Combine(DestDirectory[0], "Status"));
             }
 
-            //Common.Generate_Output(Message_Data);
+            Common.Generate_Output(Message_Data);
             EFD.Generate_Output(Message_Data);
             Status.Generate_Output(Message_Data);
 		}
