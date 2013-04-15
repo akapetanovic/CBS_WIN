@@ -18,7 +18,7 @@ namespace CBS
         private static string App_Settings_Path = @"C:\CBS\settings\";
 
         // Common
-        private static string HEART_BEAT = "" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second;
+        private static string HEART_BEAT = "" + DateTime.UtcNow.Year + DateTime.UtcNow.Month + DateTime.UtcNow.Day + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second;
 
         // Timer to save off last time application was alive
         private static System.Timers.Timer HEART_BEAT_TIMER;
@@ -149,7 +149,7 @@ namespace CBS
 
                 // Here check if there has been more 10min since application has been down
                 TimeSpan TenMin = new TimeSpan(0, 10, 0);
-                TimeSpan AppDown = DateTime.Now - Get_Power_OFF_Time();
+                TimeSpan AppDown = DateTime.UtcNow - Get_Power_OFF_Time();
 
                 if (AppDown > TenMin)
                     ClearSourceDirectory();
@@ -210,7 +210,7 @@ namespace CBS
             Settings_Data = Settings_Data + "DESTINATION_DIR" + " " + Destination_Path + Environment.NewLine;
 
 
-            Settings_Data = Settings_Data + "HEART_BEAT" + " " + GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.Now) + Environment.NewLine;
+            Settings_Data = Settings_Data + "HEART_BEAT" + " " + GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow) + Environment.NewLine;
             //////////////////////////////////////////////////////////////////////////////////////
 
             // create a writer and open the file

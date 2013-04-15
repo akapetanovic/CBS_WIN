@@ -54,7 +54,7 @@ namespace CBS
             XElemRoot.AppendChild(XTemp);
 
             string File_Path = Get_Dir_By_ACID_AND_IFPLID(Message_Data.ACID, Message_Data.IFPLID);
-            File_Path = Path.Combine(File_Path, ("Flight_Data_EFD_" + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.Now) + ".xml"));
+            File_Path = Path.Combine(File_Path, ("Flight_Data_EFD_" + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow) + ".xml"));
             XDoc.Save(File_Path);
         }
 

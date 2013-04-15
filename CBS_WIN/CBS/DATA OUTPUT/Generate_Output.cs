@@ -14,7 +14,7 @@ namespace CBS
             {
                 // This must be a new flight, so lets create applicable directory
                 IFPLID_DIR_NAME = Message_Data.ACID + "_" + Message_Data.IFPLID + "_";
-                IFPLID_DIR_NAME = IFPLID_DIR_NAME + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.Now);
+                IFPLID_DIR_NAME = IFPLID_DIR_NAME + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow);
                 Directory.CreateDirectory(CBS_Main.Get_Destination_Dir() + IFPLID_DIR_NAME);
                 // Now when it is created, lets get it again so it can be used
                 DestDirectory = Directory.GetDirectories(CBS_Main.Get_Destination_Dir(), IFPLID_DIR_NAME);

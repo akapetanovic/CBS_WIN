@@ -26,7 +26,7 @@ namespace CBS
             string FileName = Path.Combine(CBS_Main.Get_APP_Settings_Path(), "fixpoints");
             char[] delimiterChars = { ';' };
             StreamReader MyStreamReader;
-            DateTime StartTime = DateTime.Now;
+            DateTime StartTime = DateTime.UtcNow;
             if (File.Exists(FileName))
             {
                 // Lets read in settings from the file
