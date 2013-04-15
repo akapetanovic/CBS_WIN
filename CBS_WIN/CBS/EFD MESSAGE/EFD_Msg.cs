@@ -74,6 +74,9 @@ namespace CBS
 					break;
 				}
 			}
+
+            Reader.Close();
+            Reader.Dispose();
 		}
 	}
 }

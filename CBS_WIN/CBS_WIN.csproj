@@ -34,6 +34,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Google.KML, Version=2.1.0.6, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>CBS\KML\Google.KML.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpKml, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>CBS\KML\SharpKml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,7 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CBS\CBS_Common.cs" />
+    <Compile Include="CBS\CBS_Main.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\Common.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\EFD.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\Status.cs" />
@@ -91,6 +99,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CBS\KML\Google.KML.dll" />
+    <Content Include="CBS\KML\SharpKml.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

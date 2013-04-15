@@ -38,7 +38,7 @@
             // 
             // btnDebug
             // 
-            this.btnDebug.Location = new System.Drawing.Point(342, 137);
+            this.btnDebug.Location = new System.Drawing.Point(12, 103);
             this.btnDebug.Name = "btnDebug";
             this.btnDebug.Size = new System.Drawing.Size(75, 23);
             this.btnDebug.TabIndex = 1;
@@ -80,9 +80,9 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 137);
+            this.button1.Location = new System.Drawing.Point(423, 29);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.Size = new System.Drawing.Size(53, 68);
             this.button1.TabIndex = 6;
             this.button1.Text = "Save";
             this.button1.UseVisualStyleBackColor = true;
@@ -92,7 +92,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(432, 172);
+            this.ClientSize = new System.Drawing.Size(482, 132);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.textBoxDestinationDirectory);
             this.Controls.Add(this.textBoxSourceDirectory);
@@ -100,7 +100,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnDebug);
             this.Name = "MAIN";
-            this.Text = "MAIN";
+            this.Text = "CBS 1.0";
             this.Load += new System.EventHandler(this.MAIN_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

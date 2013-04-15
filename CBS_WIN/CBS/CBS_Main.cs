@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Timers;
 
 namespace CBS
 {
-    class CBS_Common
+    class CBS_Main
     {
+        private static bool FileWatcherEnabled = true;
         // WINDOWS
         //
         // Will get changed to LINUX paths on Initialise if APP is running
@@ -21,17 +21,12 @@ namespace CBS
         private static string HEART_BEAT = "" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Second;
 
         // Timer to save off last time application was alive
-        private static System.Timers.Timer HART_BEAT_TIMER;
+        private static System.Timers.Timer HEART_BEAT_TIMER;
 
         public enum Host_OS { WIN, LINUX };
         public static Host_OS Get_Host_OS()
         {
-            //Get Operating system information.
-            OperatingSystem os = Environment.OSVersion;
-            //Get version information about the os.
-            Version vs = os.Version;
-
-            if (os.Platform == PlatformID.Unix)
+            if (Environment.OSVersion.Platform == PlatformID.Unix)
                 return Host_OS.LINUX;
             else
                 return Host_OS.WIN;
@@ -39,10 +34,8 @@ namespace CBS
 
         public static void SetSourceAndDestinationPaths(string SOURCE, string DESTINATION)
         {
-
             Source_Path = SOURCE;
             Destination_Path = DESTINATION;
-
         }
 
         // Returns power off time (+/- 59 sec)
@@ -170,9 +163,22 @@ namespace CBS
             }
 
             // Now start heart beat timer.
-            HART_BEAT_TIMER = new System.Timers.Timer(10000); // Set up the timer for 1minute
-            HART_BEAT_TIMER.Elapsed += new ElapsedEventHandler(_HEART_BEAT_timer_Elapsed);
-            HART_BEAT_TIMER.Enabled = true;
+            HEART_BEAT_TIMER = new System.Timers.Timer(10000); // Set up the timer for 1minute
+            HEART_BEAT_TIMER.Elapsed += new ElapsedEventHandler(_HEART_BEAT_timer_Elapsed);
+            HEART_BEAT_TIMER.Enabled = true;
+
+            // Finally start file watcher to process incomming data
+            if (FileWatcherEnabled)
+                FileWatcher.CreateWatcher(Source_Path);
+        }
+
+        public static void Restart_Watcher()
+        {
+            if (FileWatcherEnabled)
+            {
+                FileWatcher.StopWatcher();
+                FileWatcher.CreateWatcher(Source_Path);
+            }
         }
 
         private static void _HEART_BEAT_timer_Elapsed(object sender, ElapsedEventArgs e)
