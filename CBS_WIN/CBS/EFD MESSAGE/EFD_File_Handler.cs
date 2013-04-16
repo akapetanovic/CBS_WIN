@@ -28,6 +28,10 @@ namespace CBS
                             //// Generate output
                             Generate_Output.Generate(EDF_MESSAGE);
 
+                            // Let the status handler know that the
+                            // message has arrived...
+                            CBS_Main.Notify_EFD_Message_Recived();
+
                             //// Once done with the file, 
                             //// lets delete it as we do not
                             //// needed it any more

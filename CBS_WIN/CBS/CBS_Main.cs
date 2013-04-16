@@ -36,6 +36,17 @@ namespace CBS
         // Holds System Status periodic rate in seconds
         private static int System_Status_Update_Rate_Sec = 10;
 
+        /////////////////////////////////////////////////
+        // No EFD data reception timout in minutes
+        private static int No_EFD_Data_Timout = 10;
+        private static DateTime Last_EFD_Messsage_Reception_Time = DateTime.UtcNow;
+
+        // Called by the 
+        public static void Notify_EFD_Message_Recived()
+        {
+            Last_EFD_Messsage_Reception_Time = DateTime.UtcNow;
+        }
+
         public enum Host_OS { WIN, LINUX };
         public static Host_OS Get_Host_OS()
         {
@@ -95,6 +106,11 @@ namespace CBS
 
             return flights_Path;
 
+        }
+
+        public static string Get_System_Status_Dir()
+        {
+            return System_Status_Path;
         }
 
         public static string Get_APP_Settings_Path()
@@ -170,6 +186,9 @@ namespace CBS
                             case "SYS_STATUS_UPDATE_RATE":
                                 System_Status_Update_Rate_Sec = int.Parse(words[1]);
                                 break;
+                            case "NO_EFD_DATA_TIMEOUT":
+                                No_EFD_Data_Timout = int.Parse(words[1]);
+                                break;
                             default:
                                 break;
                         }
@@ -239,9 +258,12 @@ namespace CBS
             SaveSettings();
         }
 
+        // Periodically call System Status Handler
         private static void System_Status_Periodic_Update(object sender, ElapsedEventArgs e)
         {
-           
+            TimeSpan No_EFD_Data_Time = (DateTime.UtcNow - Last_EFD_Messsage_Reception_Time);
+            TimeSpan Timeout = new TimeSpan(0, No_EFD_Data_Timout, 0);
+            systemStatus.Generate((No_EFD_Data_Time > Timeout));
         }
 
         // Deletes all files from the source directory
@@ -281,6 +303,9 @@ namespace CBS
             Settings_Data = Settings_Data + "#" + Environment.NewLine;
             Settings_Data = Settings_Data + "# Number of min after app will power up in cold power up mode" + Environment.NewLine;
             Settings_Data = Settings_Data + "COLD_POWER_UP" + " " + Cold_Start_Timeout_Min.ToString() + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# No EFD data recived status reporting timout in minutes" + Environment.NewLine;
+            Settings_Data = Settings_Data + "NO_EFD_DATA_TIMEOUT" + " " + No_EFD_Data_Timout.ToString() + Environment.NewLine;
             //////////////////////////////////////////////////////////////////////////////////////
 
             // create a writer and open the file

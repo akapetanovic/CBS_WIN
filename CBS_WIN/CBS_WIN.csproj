@@ -58,6 +58,7 @@
     <Compile Include="CBS\DATA OUTPUT\Generate\Common.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\EFD.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\Status.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\systemStatus.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate_Output.cs" />
     <Compile Include="CBS\EFD MESSAGE\EFD_File_Handler.cs" />
     <Compile Include="CBS\EFD MESSAGE\EFD_Msg.cs" />
