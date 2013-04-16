@@ -113,7 +113,7 @@ namespace CBS
                 Source_Path = "/var/EFD/";
                 flights_Path = "/var/cbs/prediction/flights/";
                 System_Status_Path = "/var/cbs/prediction/systemStatus/";
-                Main_Status_Path = "var/cbs/prediction/status/";
+                Main_Status_Path = "/var/cbs/prediction/status/";
                 App_Settings_Path = "/var/cbs/settings/";
             }
 
