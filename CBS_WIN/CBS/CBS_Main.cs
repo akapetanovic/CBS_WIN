@@ -112,8 +112,8 @@ namespace CBS
                 // Linux
                 Source_Path = "/var/EFD/";
                 flights_Path = "/var/cbs/prediction/flights/";
-                System_Status_Path = "/var/CBS/prediction/systemStatus/";
-                Main_Status_Path = "var/CBS/prediction/status/";
+                System_Status_Path = "/var/cbs/prediction/systemStatus/";
+                Main_Status_Path = "var/cbs/prediction/status/";
                 App_Settings_Path = "/var/cbs/settings/";
             }
 
