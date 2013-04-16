@@ -14,14 +14,27 @@ namespace CBS
         // Will get changed to LINUX paths on Initialise if APP is running
         // on LINUX !!!
         private static string Source_Path = @"C:\CBS\source\";
-        private static string Destination_Path = @"C:\CBS\destination\";
+        private static string flights_Path = @"C:\CBS\destination\";
         private static string App_Settings_Path = @"C:\CBS\settings\";
+        private static string System_Status_Path = @"C:\CBS\systemStatus\";
+        private static string Main_Status_Path = @"C:\CBS\status\";
 
         // Common
         private static string HEART_BEAT = "" + DateTime.UtcNow.Year + DateTime.UtcNow.Month + DateTime.UtcNow.Day + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second;
 
-        // Timer to save off last time application was alive
-        private static System.Timers.Timer HEART_BEAT_TIMER;
+        // Timer used to periodically save off last time application was alive
+        private static System.Timers.Timer Cold_Start_Timer;
+        // The number of minutes after applicaton will power
+        // up in "Cold Power Up" Status. This imples that
+        // upon power only newly arrived data will be processed
+        // and old data will immediatly be deleted.
+        private static int Cold_Start_Timeout_Min = 10;
+
+        // Timer to periodically create EFD_Status.xml file
+        // as status indication of the module. 
+        private static System.Timers.Timer System_Status_Timer;
+        // Holds System Status periodic rate in seconds
+        private static int System_Status_Update_Rate_Sec = 10;
 
         public enum Host_OS { WIN, LINUX };
         public static Host_OS Get_Host_OS()
@@ -35,7 +48,7 @@ namespace CBS
         public static void SetSourceAndDestinationPaths(string SOURCE, string DESTINATION)
         {
             Source_Path = SOURCE;
-            Destination_Path = DESTINATION;
+            flights_Path = DESTINATION;
         }
 
         // Returns power off time (+/- 59 sec)
@@ -80,7 +93,7 @@ namespace CBS
         public static string Get_Destination_Dir()
         {
 
-            return Destination_Path;
+            return flights_Path;
 
         }
 
@@ -98,7 +111,9 @@ namespace CBS
             {
                 // Linux
                 Source_Path = "/var/EFD/";
-                Destination_Path = "/var/cbs/prediction/flights/";
+                flights_Path = "/var/cbs/prediction/flights/";
+                System_Status_Path = "/var/CBS/prediction/systemStatus/";
+                Main_Status_Path = "var/CBS/prediction/status/";
                 App_Settings_Path = "/var/cbs/settings/";
             }
 
@@ -106,10 +121,14 @@ namespace CBS
             // is set up on the host machine
             if (Directory.Exists(Source_Path) == false)
                 Directory.CreateDirectory(Source_Path);
-            if (Directory.Exists(Destination_Path) == false)
-                Directory.CreateDirectory(Destination_Path);
+            if (Directory.Exists(flights_Path) == false)
+                Directory.CreateDirectory(flights_Path);
             if (Directory.Exists(App_Settings_Path) == false)
                 Directory.CreateDirectory(App_Settings_Path);
+            if (Directory.Exists(System_Status_Path) == false)
+                Directory.CreateDirectory(System_Status_Path);
+            if (Directory.Exists(Main_Status_Path) == false)
+                Directory.CreateDirectory(Main_Status_Path);
 
             // Check if cbs_config.txt exists, if so load settings
             // data saved from the previous session
@@ -124,35 +143,56 @@ namespace CBS
                 while (MyStreamReader.Peek() >= 0)
                 {
                     Settings_Data = MyStreamReader.ReadLine();
-                    string[] words = Settings_Data.Split(delimiterChars);
-
-                    switch (words[0])
+                    if (Settings_Data[0] != '#')
                     {
-                        case "SOURCE_DIR":
+                        string[] words = Settings_Data.Split(delimiterChars);
 
-                            Source_Path = words[1];
-
-                            break;
-                        case "DESTINATION_DIR":
-
-                            Destination_Path = words[1];
-
-                            break;
-                        case "HEART_BEAT":
-                            HEART_BEAT = words[1];
-                            break;
+                        switch (words[0])
+                        {
+                            case "SOURCE_DIR":
+                                Source_Path = words[1];
+                                break;
+                            case "FLIGHTS_DIR":
+                                flights_Path = words[1];
+                                break;
+                            case "SYSTEM_STATUS_DIR":
+                                System_Status_Path = words[1];
+                                break;
+                            case "MAIN_STATUS_DIR":
+                                Main_Status_Path = words[1];
+                                break;
+                            case "HEART_BEAT":
+                                HEART_BEAT = words[1];
+                                break;
+                            case "COLD_POWER_UP":
+                                Cold_Start_Timeout_Min = int.Parse(words[1]);
+                                break;
+                            case "SYS_STATUS_UPDATE_RATE":
+                                System_Status_Update_Rate_Sec = int.Parse(words[1]);
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
 
                 MyStreamReader.Close();
                 MyStreamReader.Dispose();
 
-                // Here check if there has been more 10min since application has been down
-                TimeSpan TenMin = new TimeSpan(0, 10, 0);
+                // Here check if there has been more than parameter since 
+                // application has been down
+                TimeSpan TenMin = new TimeSpan(0, Cold_Start_Timeout_Min, 0);
                 TimeSpan AppDown = DateTime.UtcNow - Get_Power_OFF_Time();
 
+                // Now check if the application has been down for more than
+                // 10 minutes. If so then clear the directory
                 if (AppDown > TenMin)
                     ClearSourceDirectory();
+                else
+                {
+                    // Call routine to process all files that might have
+                    // arrived in the last 10 minutes or less.
+                }
 
                 // Lets save once so HART BEAT gets saved right away
                 SaveSettings();
@@ -168,13 +208,21 @@ namespace CBS
             }
 
             // Now start heart beat timer.
-            HEART_BEAT_TIMER = new System.Timers.Timer(10000); // Set up the timer for 1minute
-            HEART_BEAT_TIMER.Elapsed += new ElapsedEventHandler(_HEART_BEAT_timer_Elapsed);
-            HEART_BEAT_TIMER.Enabled = true;
+            Cold_Start_Timer = new System.Timers.Timer(10000); // Set up the timer for 1minute
+            Cold_Start_Timer.Elapsed += new ElapsedEventHandler(_HEART_BEAT_timer_Elapsed);
+            Cold_Start_Timer.Enabled = true;
 
-            // Finally start file watcher to process incomming data
+            // Start file watcher to process incomming data
             if (FileWatcherEnabled)
                 FileWatcher.CreateWatcher(Source_Path);
+
+            //////////////////////////////////////////////////////
+            // Start periodic timer that will drive system status 
+            // update logic
+            // Now start heart beat timer.
+            System_Status_Timer = new System.Timers.Timer((System_Status_Update_Rate_Sec * 100)); // Set up the timer for 1minute
+            System_Status_Timer.Elapsed += new ElapsedEventHandler(System_Status_Periodic_Update);
+            System_Status_Timer.Enabled = true;
         }
 
         public static void Restart_Watcher()
@@ -191,11 +239,16 @@ namespace CBS
             SaveSettings();
         }
 
-        // Deletes all files from the source directory
-        private static void ClearSourceDirectory()
+        private static void System_Status_Periodic_Update(object sender, ElapsedEventArgs e)
         {
-            foreach (string file in Directory.GetFiles(Source_Path))
-                File.Delete(file);
+           
+        }
+
+        // Deletes all files from the source directory
+        public static void ClearSourceDirectory()
+        {
+            foreach (string directories in Directory.GetDirectories(Source_Path))
+                Directory.Delete(directories, true);  
         }
 
         public static void SaveSettings()
@@ -205,12 +258,29 @@ namespace CBS
 
             //////////////////////////////////////////////////////////////////////////////////////
             // Do not chanage the order of calls
-
+            Settings_Data = Settings_Data + "# This is CBS configuration file" + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Root directory of the incomming EFD messages" + Environment.NewLine;
             Settings_Data = Settings_Data + "SOURCE_DIR" + " " + Source_Path + Environment.NewLine;
-            Settings_Data = Settings_Data + "DESTINATION_DIR" + " " + Destination_Path + Environment.NewLine;
-
-
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Destination of the output prediction data" + Environment.NewLine;
+            Settings_Data = Settings_Data + "FLIGHTS_DIR" + " " + flights_Path + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Destination of the system status data" + Environment.NewLine;
+            Settings_Data = Settings_Data + "SYSTEM_STATUS_DIR" + " " + System_Status_Path + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# System Status update rate in seconds" + Environment.NewLine;
+            Settings_Data = Settings_Data + "SYS_STATUS_UPDATE_RATE" + " " + System_Status_Update_Rate_Sec + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Destination of the main status data" + Environment.NewLine;
+            Settings_Data = Settings_Data + "MAIN_STATUS_DIR" + " " + Main_Status_Path + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Do not touch this one !!! App internal parameter" + Environment.NewLine;
             Settings_Data = Settings_Data + "HEART_BEAT" + " " + GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow) + Environment.NewLine;
+            Settings_Data = Settings_Data + "#" + Environment.NewLine;
+            Settings_Data = Settings_Data + "# Number of min after app will power up in cold power up mode" + Environment.NewLine;
+            Settings_Data = Settings_Data + "COLD_POWER_UP" + " " + Cold_Start_Timeout_Min.ToString() + Environment.NewLine;
             //////////////////////////////////////////////////////////////////////////////////////
 
             // create a writer and open the file

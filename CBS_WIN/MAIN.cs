@@ -53,5 +53,10 @@ namespace CBS_WIN
             CBS_Main.SaveSettings();
             CBS_Main.Restart_Watcher();
         }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            CBS_Main.ClearSourceDirectory();
+        }
     }
 }

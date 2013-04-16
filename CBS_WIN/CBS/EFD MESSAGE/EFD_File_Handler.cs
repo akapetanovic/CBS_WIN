@@ -10,12 +10,11 @@ namespace CBS
 
         public static void Handle_New_File (string Path)
 		{
-
             while (true)
             {
                 try
                 {
-                    using (MyStreamReader  = System.IO.File.OpenText(Path))
+                    using (MyStreamReader = System.IO.File.OpenText(Path))
                     {
                         if (MyStreamReader != null)
                         {
@@ -45,9 +44,9 @@ namespace CBS
                         }
                     }
                 }
-                catch (FileNotFoundException ex)
+                catch (Exception ex)
                 {
-                   
+                    string T = ex.Message;
                 }
                 Thread.Sleep(500);
             }
