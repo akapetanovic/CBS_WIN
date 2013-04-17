@@ -19,6 +19,7 @@ namespace CBS
         private static string System_Status_Path = @"C:\var\cbs\prediction\systemStatus\";
         private static string Main_Status_Path = @"C:\var\cbs\prediction\status\";
         private static string AIRAC_Data_Path = @"C:\var\cbs\settings\AIRAC\";
+        private static string Tmp_Directory =  @"C:\tmp";
 
         // Common
         private static string HEART_BEAT = "" + DateTime.UtcNow.Year + DateTime.UtcNow.Month + DateTime.UtcNow.Day + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second;
@@ -109,6 +110,11 @@ namespace CBS
 
         }
 
+        public static string Get_Temp_Dir()
+        {
+            return Tmp_Directory;
+        }
+
         public static string Get_AIRAC_Dir()
         {
             return AIRAC_Data_Path;
@@ -138,6 +144,7 @@ namespace CBS
                 Main_Status_Path = "/var/cbs/prediction/status/";
                 App_Settings_Path = "/var/cbs/settings/EFD/";
                 AIRAC_Data_Path = "/var/cbs/settings/AIRAC/";
+                Tmp_Directory = "/tmp/";
             }
 
             // Now make sure that proper directory structure 
@@ -154,6 +161,8 @@ namespace CBS
                 Directory.CreateDirectory(Main_Status_Path);
             if (Directory.Exists(AIRAC_Data_Path) == false)
                 Directory.CreateDirectory(AIRAC_Data_Path);
+            if (Directory.Exists(Tmp_Directory) == false)
+                Directory.CreateDirectory(Tmp_Directory);
 
             // Check if cbs_config.txt exists, if so load settings
             // data saved from the previous session
@@ -275,7 +284,7 @@ namespace CBS
         {
             TimeSpan No_EFD_Data_Time = (DateTime.UtcNow - Last_EFD_Messsage_Reception_Time);
             TimeSpan Timeout = new TimeSpan(0, No_EFD_Data_Timout, 0);
-            systemStatus.Generate((No_EFD_Data_Time > Timeout));
+            System_Status.Generate((No_EFD_Data_Time > Timeout));
         }
 
         // Deletes all files from the source directory

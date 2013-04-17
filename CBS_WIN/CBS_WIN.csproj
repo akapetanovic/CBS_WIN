@@ -56,9 +56,13 @@
   <ItemGroup>
     <Compile Include="CBS\CBS_Main.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\Common.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\EFD_status.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\EFD_AOI_Entry.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\EFD_AOI_Exit.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\EFD_Trajectory.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate\EFD.cs" />
-    <Compile Include="CBS\DATA OUTPUT\Generate\Status.cs" />
-    <Compile Include="CBS\DATA OUTPUT\Generate\systemStatus.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\Main_Status.cs" />
+    <Compile Include="CBS\DATA OUTPUT\Generate\System_Status.cs" />
     <Compile Include="CBS\DATA OUTPUT\Generate_Output.cs" />
     <Compile Include="CBS\EFD MESSAGE\EFD_File_Handler.cs" />
     <Compile Include="CBS\EFD MESSAGE\EFD_Msg.cs" />

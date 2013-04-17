@@ -27,7 +27,8 @@ namespace CBS
 
             Common.Generate_Output(Message_Data);
             EFD.Generate_Output(Message_Data);
-            Status.Generate_Output(Message_Data);
+            Main_Status.Generate_Output(Message_Data);
+            EFD_Status.Generate_Output(Message_Data);
 		}
 	}
 }

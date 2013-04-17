@@ -6,7 +6,7 @@ using System.IO;
 
 namespace CBS
 {
-    class systemStatus
+    class System_Status
     {
         // Periodically create empty file called /var/cbs/prediction/systemStatus/EFD_Status.xml
         // The file is created empty unless no EFD data is recived after N minutes. In that case
@@ -25,7 +25,7 @@ namespace CBS
             if ((No_EFD_DATA_Flag == true) && (No_EFD_DATA_Flag_Last_Cycle == false))
             {
                 XmlDocument XDoc = new XmlDocument();
-                string File_Path = Path.Combine(CBS_Main.Get_System_Status_Dir(), ("EFD_Status.xml"));
+               
 
                 // Create root node.
                 XmlElement XElemRoot = XDoc.CreateElement("EFDStatus");
@@ -47,7 +47,10 @@ namespace CBS
                 XTemp.InnerText = CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.Now);
                 XElemRoot.AppendChild(XTemp);
 
-                XDoc.Save(File_Path);
+                string File_Path = Path.Combine(CBS_Main.Get_System_Status_Dir(), ("EFD_Status.xml"));
+                string Tmp = Path.Combine(CBS_Main.Get_Temp_Dir(), ("EFD_Status.xml"));
+                XDoc.Save(Tmp);
+                File.Move(Tmp, File_Path);
             }
             else if (No_EFD_DATA_Flag == false)
             {
