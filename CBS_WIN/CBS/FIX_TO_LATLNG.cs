@@ -23,7 +23,7 @@ namespace CBS
         {
             FIXPOINT_TYPE Return_FIX = new FIXPOINT_TYPE();
             string FIXPOINT_Data;
-            string FileName = Path.Combine(CBS_Main.Get_APP_Settings_Path(), "fixpoints");
+            string FileName = Path.Combine(CBS_Main.Get_AIRAC_Dir(), "fixpoints");
             char[] delimiterChars = { ';' };
             StreamReader MyStreamReader;
             DateTime StartTime = DateTime.UtcNow;
