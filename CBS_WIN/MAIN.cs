@@ -31,8 +31,6 @@ namespace CBS_WIN
 
             // Generate output
             Generate_Output.Generate(EDF_MESSAGE);
-
-           // FIX_TO_LATLNG.FIXPOINT_TYPE T = FIX_TO_LATLNG.Get_LATLNG("ADABI");
         }
 
         private void MAIN_Load(object sender, EventArgs e)
@@ -40,7 +38,9 @@ namespace CBS_WIN
             ////////////////////////////////////////////////////////////////////////////
             // These calls are to be executed in the following order and
             // are not to be changed
-            CBS_Main.Initialize();
+            
+            // CBS_Main.Initialize();
+            
             this.textBoxSourceDirectory.Text = CBS_Main.Get_Source_Dir();
             this.textBoxDestinationDirectory.Text = CBS_Main.Get_Destination_Dir();
             ///////////////////////////////////////////////////////////////////////////
