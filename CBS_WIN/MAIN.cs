@@ -38,8 +38,8 @@ namespace CBS_WIN
             ////////////////////////////////////////////////////////////////////////////
             // These calls are to be executed in the following order and
             // are not to be changed
-            
-            // CBS_Main.Initialize();
+
+            CBS.CBS_Main.Initialize();
             
             this.textBoxSourceDirectory.Text = CBS_Main.Get_Source_Dir();
             this.textBoxDestinationDirectory.Text = CBS_Main.Get_Destination_Dir();
