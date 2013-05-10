@@ -48,6 +48,7 @@ namespace CBS
             //</kml>
         public static void Generate_Output (EFD_Msg Message_Data)
         {
+            string TIME_AS_YYYYMMDDHHMMSS = CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow);
             string Time_Stamp = KML_Common.Get_KML_Time_Stamp();
             string KML_File_Content =
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
@@ -84,7 +85,7 @@ namespace CBS
                         "</Data>" + Environment.NewLine +
 
                         "<Data name=\"fileLocation\">" + Environment.NewLine +
-                            "<value>flights/ACID_IFPLID_DATETIME/EFD/EFD_AOI_Exit_DATETIME.kml" + Environment.NewLine +
+                            "<value>flights/ACID_IFPLID_DATETIME/EFD/EFD_AOI_Exit_" + TIME_AS_YYYYMMDDHHMMSS + ".kml" + "</value>" + Environment.NewLine +
                         "</Data>" + Environment.NewLine +
 
                         "</ExtendedData>" + Environment.NewLine +
@@ -98,10 +99,10 @@ namespace CBS
 
             // Get the final data path
             string File_Path = Get_Dir_By_ACID_AND_IFPLID(Message_Data.ACID, Message_Data.IFPLID);
-            File_Path = Path.Combine(File_Path, ("EFD_AOI_Exit_" + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow) + ".kml"));
+            File_Path = Path.Combine(File_Path, ("EFD_AOI_Exit_" + TIME_AS_YYYYMMDDHHMMSS + ".kml"));
 
             // Save data in the tmp directory first
-            string Tmp = Path.Combine(CBS_Main.Get_Temp_Dir(), ("EFD_AOI_Exit_" + CBS_Main.GetDate_Time_AS_YYYYMMDDHHMMSS(DateTime.UtcNow) + ".kml"));
+            string Tmp = Path.Combine(CBS_Main.Get_Temp_Dir(), ("EFD_AOI_Exit_" + TIME_AS_YYYYMMDDHHMMSS + ".kml"));
 
             // create a writer and open the file
             TextWriter tw = new StreamWriter(Tmp);
