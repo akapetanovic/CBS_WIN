@@ -56,6 +56,9 @@ namespace CBS
                                 //// Generate output
                                 Generate_Output.Generate(EDF_MESSAGE);
 
+                                // Write data to the MySqlDatabase
+                                MySqlWriter.Write_One_Message(EDF_MESSAGE);
+
                                 // Let the status handler know that the
                                 // message has arrived...
                                 CBS_Main.Notify_EFD_Message_Recived();

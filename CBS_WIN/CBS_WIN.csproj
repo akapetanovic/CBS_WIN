@@ -38,6 +38,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>CBS\KML\Google.KML.dll</HintPath>
     </Reference>
+    <Reference Include="MySql.Data, Version=6.6.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Program Files\MySQL\MySQL Connector Net 6.6.5\Assemblies\v4.0\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="SharpKml, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>CBS\KML\SharpKml.dll</HintPath>
@@ -69,6 +73,7 @@
     <Compile Include="CBS\EFD MESSAGE\EFD_Msg.cs" />
     <Compile Include="CBS\FIX_TO_LATLNG.cs" />
     <Compile Include="CBS\GeoCordSystem.cs" />
+    <Compile Include="CBS\MySQL\MySqlWriter.cs" />
     <Compile Include="MAIN.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -109,6 +114,7 @@
   <ItemGroup>
     <Content Include="CBS\KML\Google.KML.dll" />
     <Content Include="CBS\KML\SharpKml.dll" />
+    <Content Include="CBS\MySQL\MySql.Data.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

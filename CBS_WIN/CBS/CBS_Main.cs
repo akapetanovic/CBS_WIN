@@ -259,6 +259,9 @@ namespace CBS
             // Start input data monitor
             EFD_File_Handler.Initialise();
 
+            // Open up connection to the MySQL database
+            MySqlWriter.Initialise();
+
             //////////////////////////////////////////////////////
             // Start periodic timer that will drive system status 
             // update logic
