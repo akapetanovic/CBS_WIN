@@ -58,5 +58,10 @@ namespace CBS_WIN
         {
             CBS_Main.ClearSourceDirectory();
         }
+
+        private void MAIN_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MySqlWriter.CloseConnection();
+        }
     }
 }

@@ -113,6 +113,7 @@
             this.Controls.Add(this.btnDebug);
             this.Name = "MAIN";
             this.Text = "CBS 1.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MAIN_FormClosing);
             this.Load += new System.EventHandler(this.MAIN_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
