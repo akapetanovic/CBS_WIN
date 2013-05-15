@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MySql.Data.MySqlClient;
 
 namespace CBS
@@ -19,7 +18,6 @@ namespace CBS
 
         public static void CloseConnection()
         {
-            if (MySQLconn.State == System.Data.ConnectionState.Open)
                 MySQLconn.Close();
         }
 
@@ -66,41 +64,33 @@ namespace CBS
                              Get_With_Quitation(LASTUPD) + "," +
                              Get_With_Quitation(SEQMUAC) + ")";
 
-            // Make sure connection is opened
-            if (MySQLconn.State == System.Data.ConnectionState.Open)
-            {
-                
-                // First delete the data for the flight (if already exists)
-                string delete_query = "DELETE FROM " + "tms1" + " WHERE UNIQUE_ID= " + Get_With_Quitation(UNIQUE_ID);
-                //create command and assign the query and connection from the constructor
-                MySqlCommand cmd = new MySqlCommand(delete_query, MySQLconn);
+            // First delete the data for the flight (if already exists)
+            string delete_query = "DELETE FROM " + "tms1" + " WHERE UNIQUE_ID= " + Get_With_Quitation(UNIQUE_ID);
+            //create command and assign the query and connection from the constructor
+            MySqlCommand cmd = new MySqlCommand(delete_query, MySQLconn);
 
-                try
-                {
-                    //Execute command
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-                //create command and assign the query and connection from the constructor
-                cmd = new MySqlCommand(query, MySQLconn);
-
-                try
-                {
-                    //Execute command
-                    cmd.ExecuteNonQuery();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-            else
+            try
             {
-                Console.WriteLine("MySQL connection down...not able to update table");
+                //Execute command
+                cmd.ExecuteNonQuery();
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            //create command and assign the query and connection from the constructor
+            cmd = new MySqlCommand(query, MySQLconn);
+
+            try
+            {
+                //Execute command
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
         }
 
         private static string Get_With_Quitation(string String_IN)
