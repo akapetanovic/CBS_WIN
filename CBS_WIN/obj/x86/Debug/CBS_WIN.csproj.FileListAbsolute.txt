@@ -7,6 +7,8 @@ C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debu
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
+C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\Google.KML.dll
+C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\SharpKml.dll
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.exe
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.pdb
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\Google.KML.dll
@@ -18,5 +20,3 @@ C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
-C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\Google.KML.dll
-C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\SharpKml.dll
