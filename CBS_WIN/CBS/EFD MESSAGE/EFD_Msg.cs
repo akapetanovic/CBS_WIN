@@ -30,34 +30,39 @@ namespace CBS
 
             public string Name = "N/A";
             public GeoCordSystemDegMinSecUtilities.LatLongClass Position;
+            public bool Position_Determined = false;
             public string Flight_Level = "N/A";
             public Wpt_Type Type = Wpt_Type.Basic;
+            public string ETO = "N/A";
         }
 
         public class Sector_Type
         {
-            public string ID;
-            public DateTime SECTOR_ENTRY_TIME;
-            public DateTime SECTOR_EXIT_TIME;
+            public string ID = "N/A";
+            public DateTime SECTOR_ENTRY_TIME = DateTime.Now;
+            public DateTime SECTOR_EXIT_TIME = DateTime.Now;
+            public string EFL = "N/A";
+            public string XFL = "N/A";
         }
+        public List<Sector_Type> Sector_List = new List<Sector_Type>();
+
 
         // These are calculated data
         public GeoCordSystemDegMinSecUtilities.LatLongClass ENTRY_AOI_POINT = new GeoCordSystemDegMinSecUtilities.LatLongClass();
         public GeoCordSystemDegMinSecUtilities.LatLongClass EXIT_AOI_POINT = new GeoCordSystemDegMinSecUtilities.LatLongClass();
-        public DateTime ENTRY_AOI_TIME;
-        public DateTime EXIT_AOI_TIME;
-        public string Entry_FL = "N/A";
-        public string Exit_FL = "N/A";
+        public DateTime AOI_ENTRY_TIME = DateTime.Now;
+        public DateTime AOI_EXIT_TIME = DateTime.Now;
+        public string AOI_ENTRY_FL = "N/A";
+        public string AOI_EXIT_FL = "N/A";
         public List<Waypoint> TrajectoryPoints = new List<Waypoint>();
-        public List<Sector_Type> Sector_List = new List<Sector_Type>();
+
 
         public EFD_Msg(StreamReader Reader)
         {
             string OneLine;
             char[] delimiterChars = { ' ' };
 
-            // Parse the file and extract all data needed by
-            // EFD
+            // Parse the file and extract all data needed by EFD
             while (Reader.Peek() >= 0)
             {
                 OneLine = Reader.ReadLine();
@@ -95,6 +100,7 @@ namespace CBS
                             if (Words[1] == "RTEPTS")
                             {
 
+
                             }
                             else if (Words[1] == "ASPLIST")
                             {
@@ -115,8 +121,8 @@ namespace CBS
                                     // Always extract UAC Entry and Exit Times
                                     if ((Words[2] == "-AIRSPDES") && (Words[3] == "EDYYAOI"))
                                     {
-                                        ENTRY_AOI_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
-                                        EXIT_AOI_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
+                                        AOI_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
+                                        AOI_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
                                     }
 
                                     // Now extract all MUAC sectors and sector entry/exit times
@@ -134,6 +140,49 @@ namespace CBS
                                             Sector.SECTOR_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
                                             Sector_List.Add(Sector);
                                         }
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                if (Words[1] == "-AD" || Words[1] == "-VEC" || Words[1] == "-PT")
+                                {
+                                    switch (Words[1])
+                                    {
+                                        // -AD  -ADID OMDB -ETO 130404033500 -PTRTE DCT
+                                        case "-AD":
+
+                                            break;
+                                        // -VEC -RELDIST 01 -FL F010 -ETO 130404034715
+                                        case "-VEC":
+
+                                            break;
+                                        // -PT  -PTID GEO01 -FL F300 -ETO 130404041754
+                                        case "-PT":
+
+                                            Waypoint WPT = new Waypoint();
+
+                                            // Extract data from -PT line
+                                            WPT.Name = Words[4];
+                                            WPT.Flight_Level = Words[6].Substring(1); // Remove F at the beggining.
+                                            WPT.ETO = Words[8];
+
+                                            FIX_TO_LATLNG.FIXPOINT_TYPE FIX = FIX_TO_LATLNG.Get_LATLNG(WPT.Name);
+                                            if (FIX.Is_Found == true)
+                                            {
+                                                WPT.Position = FIX.Position;
+                                                WPT.Position_Determined = true;
+
+                                                // Add a new point to the list
+                                                // Only add position that are known 
+                                                // as defined in the fixpoint table.
+                                                TrajectoryPoints.Add(WPT);
+                                            }
+                                            
+                                            break;
+                                        default:
+                                            break;
                                     }
                                 }
                             }

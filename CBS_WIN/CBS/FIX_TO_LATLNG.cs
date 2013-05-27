@@ -11,7 +11,7 @@ namespace CBS
         {
             public bool Is_Found = false;
             public string Name;
-            private GeoCordSystemDegMinSecUtilities.LatLongClass Position;
+            public GeoCordSystemDegMinSecUtilities.LatLongClass Position;
 
             public void SetPosition(double LAT, double LNG)
             {

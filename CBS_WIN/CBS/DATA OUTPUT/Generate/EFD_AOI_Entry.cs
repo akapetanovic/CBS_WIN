@@ -76,7 +76,7 @@ namespace CBS
                         "</Data>" + Environment.NewLine +
                         
                         "<Data name=\"popupLine1\">" + Environment.NewLine +
-                            "<value>Time:" + Message_Data.ENTRY_AOI_TIME.ToShortDateString() + "/" + Message_Data.ENTRY_AOI_TIME.ToShortTimeString() + "</value>" + Environment.NewLine +
+                            "<value>Time:" + Message_Data.AOI_ENTRY_TIME.ToShortDateString() + "/" + Message_Data.AOI_ENTRY_TIME.ToShortTimeString() + "</value>" + Environment.NewLine +
                         "</Data>" + Environment.NewLine +
 
                         "<Data name=\"popupLine2\">" + Environment.NewLine +
@@ -84,7 +84,7 @@ namespace CBS
                         "</Data>" + Environment.NewLine +
                         
                         "<Data name=\"popupLine3\">" + Environment.NewLine +
-                            "<value>Altitude:" + Message_Data.Entry_FL + "</value>" + Environment.NewLine +
+                            "<value>Altitude:" + Message_Data.AOI_ENTRY_FL + "</value>" + Environment.NewLine +
                         "</Data>" + Environment.NewLine +
                         
                         "<Data name=\"fileLocation\">" + Environment.NewLine +
