@@ -52,6 +52,8 @@ namespace CBS
         public GeoCordSystemDegMinSecUtilities.LatLongClass EXIT_AOI_POINT = new GeoCordSystemDegMinSecUtilities.LatLongClass();
         public DateTime AOI_ENTRY_TIME = DateTime.Now;
         public DateTime AOI_EXIT_TIME = DateTime.Now;
+        public string AOI_ENTRY_TIME_YYMMDDHHMMSS = "N/A";
+        public string AOI_EXIT_TIME_YYMMDDHHMMSS = "N/A";
         public string AOI_ENTRY_FL = "N/A";
         public string AOI_EXIT_FL = "N/A";
         public List<Waypoint> TrajectoryPoints = new List<Waypoint>();
@@ -122,7 +124,9 @@ namespace CBS
                                     if ((Words[2] == "-AIRSPDES") && (Words[3] == "EDYYAOI"))
                                     {
                                         AOI_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
+                                        AOI_ENTRY_TIME_YYMMDDHHMMSS = "20" + Words[5];
                                         AOI_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
+                                        AOI_EXIT_TIME_YYMMDDHHMMSS = "20" + Words[7];
                                     }
 
                                     // Now extract all MUAC sectors and sector entry/exit times
@@ -197,6 +201,17 @@ namespace CBS
                 }
             }
 
+            /////////////////////////////////
+            // Now set AOI Entry/Exit Points
+            if (TrajectoryPoints.Count > 1)
+            {
+                ENTRY_AOI_POINT = TrajectoryPoints[0].Position;
+                AOI_ENTRY_FL = TrajectoryPoints[0].Flight_Level;
+                EXIT_AOI_POINT = TrajectoryPoints[TrajectoryPoints.Count - 1].Position;
+                AOI_EXIT_FL = TrajectoryPoints[TrajectoryPoints.Count - 1].Flight_Level;
+               
+            }
+            
             Reader.Close();
             Reader.Dispose();
         }

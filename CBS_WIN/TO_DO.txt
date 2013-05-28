@@ -1,5 +1,4 @@
-﻿1. Finish up AOI ENTRY/EXIT generate
-2. Finish Trajectory Implementation
+﻿2. Finish Trajectory Implementation
 	1. Artifical points
 	2. Vectors
 3. Address exceptions
