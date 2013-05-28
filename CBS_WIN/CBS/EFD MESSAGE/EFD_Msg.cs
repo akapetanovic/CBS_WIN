@@ -21,22 +21,14 @@ namespace CBS
 
         public class Waypoint
         {
-            public enum Wpt_Type
-            {
-                Basic,
-                Entry,
-                Exit
-            };
-
             public string Name = "N/A";
-            public GeoCordSystemDegMinSecUtilities.LatLongClass Position;
+            public GeoCordSystemDegMinSecUtilities.LatLongClass Position = new GeoCordSystemDegMinSecUtilities.LatLongClass();
             public bool Position_Determined = false;
             public string Flight_Level = "N/A";
-            public Wpt_Type Type = Wpt_Type.Basic;
             public string ETO = "N/A";
         }
 
-        public class Sector_Type
+        public class Sector
         {
             public string ID = "N/A";
             public DateTime SECTOR_ENTRY_TIME = DateTime.Now;
@@ -44,7 +36,7 @@ namespace CBS
             public string EFL = "N/A";
             public string XFL = "N/A";
         }
-        public List<Sector_Type> Sector_List = new List<Sector_Type>();
+        public List<Sector> Sector_List = new List<Sector>();
 
 
         // These are calculated data
@@ -116,42 +108,41 @@ namespace CBS
                         // Maastricht UAC Entry and Exit Times
                         // -ASP -AIRSPDES EDYYAOI -ETI 130404091206 -XTI 130404095840
                         case "":
-                            if (Words.Length == 8)
+                            if ((Words.Length == 8) && (Words[1] == "-ASP"))
                             {
-                                if (Words[1] == "-ASP")
+                                // Always extract UAC Entry and Exit Times
+                                if ((Words[2] == "-AIRSPDES") && (Words[3] == "EDYYAOI"))
                                 {
-                                    // Always extract UAC Entry and Exit Times
-                                    if ((Words[2] == "-AIRSPDES") && (Words[3] == "EDYYAOI"))
-                                    {
-                                        AOI_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
-                                        AOI_ENTRY_TIME_YYMMDDHHMMSS = "20" + Words[5];
-                                        AOI_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
-                                        AOI_EXIT_TIME_YYMMDDHHMMSS = "20" + Words[7];
-                                    }
-
-                                    // Now extract all MUAC sectors and sector entry/exit times
-                                    // Always extract UAC Entry and Exit Times
-                                    if ((Words[2] == "-AIRSPDES") && (Words[3].Substring(0, 4) == "EDYY"))
-                                    {
-                                        string Sector_ID = Words[3].Substring(4, (Words[3].Length - 4));
-                                        // FOX,FOX1,FOX2,UAC,UACX,AOI
-                                        if (Sector_ID != "FOX" && Sector_ID != "FOX1" && Sector_ID != "FOX2" &&
-                                            Sector_ID != "UAC" && Sector_ID != "UACX" && Sector_ID != "AOI")
-                                        {
-                                            Sector_Type Sector = new Sector_Type();
-                                            Sector.ID = Sector_ID;
-                                            Sector.SECTOR_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
-                                            Sector.SECTOR_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
-                                            Sector_List.Add(Sector);
-                                        }
-                                    }
+                                    AOI_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
+                                    AOI_ENTRY_TIME_YYMMDDHHMMSS = "20" + Words[5];
+                                    AOI_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
+                                    AOI_EXIT_TIME_YYMMDDHHMMSS = "20" + Words[7];
                                 }
 
+                                // Now extract all MUAC sectors and sector entry/exit times
+                                // Always extract UAC Entry and Exit Times
+                                if ((Words[2] == "-AIRSPDES") && (Words[3].Substring(0, 4) == "EDYY"))
+                                {
+                                    string Sector_ID = Words[3].Substring(4, (Words[3].Length - 4));
+                                    // FOX,FOX1,FOX2,UAC,UACX,AOI
+                                    if (Sector_ID != "FOX" && Sector_ID != "FOX1" && Sector_ID != "FOX2" &&
+                                        Sector_ID != "UAC" && Sector_ID != "UACX" && Sector_ID != "AOI")
+                                    {
+                                        Sector Sector = new Sector();
+                                        Sector.ID = Sector_ID;
+                                        Sector.SECTOR_ENTRY_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[5]);
+                                        Sector.SECTOR_EXIT_TIME = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + Words[7]);
+                                        Sector_List.Add(Sector);
+                                    }
+                                }
                             }
                             else
                             {
                                 if (Words[1] == "-AD" || Words[1] == "-VEC" || Words[1] == "-PT")
                                 {
+                                    Waypoint WPT = new Waypoint();
+                                    FIX_TO_LATLNG.FIXPOINT_TYPE FIX = new FIX_TO_LATLNG.FIXPOINT_TYPE();
+
                                     switch (Words[1])
                                     {
                                         // -AD  -ADID OMDB -ETO 130404033500 -PTRTE DCT
@@ -161,18 +152,29 @@ namespace CBS
                                         // -VEC -RELDIST 01 -FL F010 -ETO 130404034715
                                         case "-VEC":
 
+                                            // Extract data from -PT line
+                                            WPT.Name = "-VEC" + Words[3];
+                                            WPT.Flight_Level = Words[5].Substring(1); // Remove F at the beggining.
+                                            WPT.ETO = Words[7];
+
+                                            if (TrajectoryPoints.Count > 0)
+                                            {
+                                                // Add a new point to the list
+                                                // Only add position that are known 
+                                                // as defined in the fixpoint table.
+                                                TrajectoryPoints.Add(WPT);
+                                            }
+
                                             break;
                                         // -PT  -PTID GEO01 -FL F300 -ETO 130404041754
                                         case "-PT":
-
-                                            Waypoint WPT = new Waypoint();
 
                                             // Extract data from -PT line
                                             WPT.Name = Words[4];
                                             WPT.Flight_Level = Words[6].Substring(1); // Remove F at the beggining.
                                             WPT.ETO = Words[8];
 
-                                            FIX_TO_LATLNG.FIXPOINT_TYPE FIX = FIX_TO_LATLNG.Get_LATLNG(WPT.Name);
+                                            FIX = FIX_TO_LATLNG.Get_LATLNG(WPT.Name);
                                             if (FIX.Is_Found == true)
                                             {
                                                 WPT.Position = FIX.Position;
@@ -183,7 +185,7 @@ namespace CBS
                                                 // as defined in the fixpoint table.
                                                 TrajectoryPoints.Add(WPT);
                                             }
-                                            
+
                                             break;
                                         default:
                                             break;
@@ -201,6 +203,11 @@ namespace CBS
                 }
             }
 
+            // Here parse the list and
+            // 1. Remove all "-VEC points from the end of the list
+            // 2. Determine Lon/Lat of each -VEC point
+            ParseTrajectoryList(ref TrajectoryPoints);
+
             /////////////////////////////////
             // Now set AOI Entry/Exit Points
             if (TrajectoryPoints.Count > 1)
@@ -209,11 +216,45 @@ namespace CBS
                 AOI_ENTRY_FL = TrajectoryPoints[0].Flight_Level;
                 EXIT_AOI_POINT = TrajectoryPoints[TrajectoryPoints.Count - 1].Position;
                 AOI_EXIT_FL = TrajectoryPoints[TrajectoryPoints.Count - 1].Flight_Level;
-               
             }
-            
+
             Reader.Close();
             Reader.Dispose();
+        }
+
+        // 1. Remove all "-VEC points from the end of the list
+        // 2. Determine Lon/Lat of each -VEC point
+        public void ParseTrajectoryList(ref List<Waypoint> T_List)
+        {
+            ////////////////////////////////////////////////////////////////////////////////////////
+            // 1. Remove all "-VEC points from the end of the list
+            ////////////////////////////////////////////////////////////////////////////////////////
+            int LastKnownPointIndex = -1;
+            for (int i = 0; i < T_List.Count; i++)
+            {
+                if (T_List[i].Name.Length == 6 && T_List[i].Name.Substring(0, 4) == "-VEC")
+                { }
+                else
+                {
+                    LastKnownPointIndex = i;
+                }
+            }
+
+            if (LastKnownPointIndex < (T_List.Count - 1))
+            {
+                try
+                {
+                    T_List.RemoveRange(LastKnownPointIndex + 1, T_List.Count - (LastKnownPointIndex + 1));
+                }
+                catch (Exception e)
+                {
+                    CBS_Main.WriteToLogFile("Exception removing VEC range: " + e.Message);
+                }
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+            // 2. Determine Lon/Lat of each -VEC point
+            ////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         public bool Is_New_Data_Set()

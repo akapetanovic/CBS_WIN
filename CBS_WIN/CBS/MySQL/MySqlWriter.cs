@@ -38,7 +38,7 @@ namespace CBS
             // FORMAT:
             // //RH1,1515,1522//RH2,1515,1522
             string SEQMUAC = "";
-            foreach (EFD_Msg.Sector_Type Msg in Message.Sector_List)
+            foreach (EFD_Msg.Sector Msg in Message.Sector_List)
             {
                 SEQMUAC = SEQMUAC + "//" + Msg.ID + ',' + GetTimeAS_HHMM(Msg.SECTOR_ENTRY_TIME) + ',' + GetTimeAS_HHMM(Msg.SECTOR_EXIT_TIME) + ',' + Msg.EFL + ',' + Msg.XFL;
             }
