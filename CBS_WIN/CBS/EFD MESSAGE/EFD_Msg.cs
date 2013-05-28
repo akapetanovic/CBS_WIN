@@ -233,7 +233,9 @@ namespace CBS
             for (int i = 0; i < T_List.Count; i++)
             {
                 if (T_List[i].Name.Length == 6 && T_List[i].Name.Substring(0, 4) == "-VEC")
-                { }
+                { 
+                
+                }
                 else
                 {
                     LastKnownPointIndex = i;
@@ -255,6 +257,60 @@ namespace CBS
             ////////////////////////////////////////////////////////////////////////////////////////////
             // 2. Determine Lon/Lat of each -VEC point
             ////////////////////////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < T_List.Count; i++)
+            {
+                // Check if this is a -VEC point
+                if (T_List[i].Name.Length == 6 && T_List[i].Name.Substring(0, 4) == "-VEC")
+                {
+                    // 1. YES, then LastKnownPointIndex is the index of the previous last known point
+                    // 2. Now determine the next known point
+                    int next_known_point = GetNextKnownPointIndex(i + 1, ref T_List);
+
+                    // Now we have two known points, so lets compute a new position representing
+                    // the percentage of the distance between two known points specifed in the -VEC
+                    // point.
+                    int percentage = int.Parse(T_List[i].Name.Substring(4, 2));
+
+                    // select a reference elllipsoid
+                    Ellipsoid reference = Ellipsoid.WGS84;
+                    // instantiate the calculator
+                    GeodeticCalculator geoCalc = new GeodeticCalculator();
+
+                    GlobalPosition Start_Pos = new GlobalPosition(new GlobalCoordinates(T_List[LastKnownPointIndex].Position.GetLatLongDecimal().LatitudeDecimal, T_List[LastKnownPointIndex].Position.GetLatLongDecimal().LongitudeDecimal));
+                    GlobalPosition End_Pos = new GlobalPosition(new GlobalCoordinates(T_List[next_known_point].Position.GetLatLongDecimal().LatitudeDecimal, T_List[next_known_point].Position.GetLatLongDecimal().LongitudeDecimal));
+
+                    double distance = geoCalc.CalculateGeodeticMeasurement(reference, Start_Pos, End_Pos).PointToPointDistance;
+                    distance = (distance / 100.0) * (double)percentage;
+
+                    Angle Azimuth = geoCalc.CalculateGeodeticMeasurement(reference, Start_Pos, End_Pos).Azimuth;
+
+                    GeoCordSystemDegMinSecUtilities.LatLongClass New_Position =
+                    GeoCordSystemDegMinSecUtilities.CalculateNewPosition(new GeoCordSystemDegMinSecUtilities.LatLongClass(Start_Pos.Latitude.Degrees, Start_Pos.Longitude.Degrees), distance, Azimuth.Degrees);
+
+                    T_List[i].Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(New_Position.GetLatLongDecimal().LatitudeDecimal, New_Position.GetLatLongDecimal().LongitudeDecimal);      
+                }
+                else
+                {
+                    LastKnownPointIndex = i;
+                }
+            }
+        }
+
+        public int GetNextKnownPointIndex(int cur_index, ref List<Waypoint> T_List)
+        {
+            int return_index = 0;
+            for (int i = cur_index; i < T_List.Count; i++)
+            {
+                if (T_List[i].Name.Length == 6 && T_List[i].Name.Substring(0, 4) == "-VEC")
+                {
+                }
+                else
+                {
+                    return_index = i;
+                    break;
+                }
+            }
+            return return_index;
         }
 
         public bool Is_New_Data_Set()
