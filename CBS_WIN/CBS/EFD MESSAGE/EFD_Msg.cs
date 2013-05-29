@@ -279,14 +279,20 @@ namespace CBS
                     GlobalPosition Start_Pos = new GlobalPosition(new GlobalCoordinates(T_List[LastKnownPointIndex].Position.GetLatLongDecimal().LatitudeDecimal, T_List[LastKnownPointIndex].Position.GetLatLongDecimal().LongitudeDecimal));
                     GlobalPosition End_Pos = new GlobalPosition(new GlobalCoordinates(T_List[next_known_point].Position.GetLatLongDecimal().LatitudeDecimal, T_List[next_known_point].Position.GetLatLongDecimal().LongitudeDecimal));
 
+                    // Get the distance and conver it to NM
                     double distance = geoCalc.CalculateGeodeticMeasurement(reference, Start_Pos, End_Pos).PointToPointDistance;
                     distance = (distance / 100.0) * (double)percentage;
-
+                    distance = 0.00053996 * distance;
+                    ////////////////////////////////////////////////////////////
+                    
+                    // Calculate the azimuth between two known points
                     Angle Azimuth = geoCalc.CalculateGeodeticMeasurement(reference, Start_Pos, End_Pos).Azimuth;
 
+                    // Calculate new position
                     GeoCordSystemDegMinSecUtilities.LatLongClass New_Position =
                     GeoCordSystemDegMinSecUtilities.CalculateNewPosition(new GeoCordSystemDegMinSecUtilities.LatLongClass(Start_Pos.Latitude.Degrees, Start_Pos.Longitude.Degrees), distance, Azimuth.Degrees);
 
+                    // Assign new position to the -VEC point
                     T_List[i].Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(New_Position.GetLatLongDecimal().LatitudeDecimal, New_Position.GetLatLongDecimal().LongitudeDecimal);      
                 }
                 else
