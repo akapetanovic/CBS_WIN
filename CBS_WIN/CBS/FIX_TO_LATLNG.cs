@@ -26,7 +26,7 @@ namespace CBS
             string FileName = Path.Combine(CBS_Main.Get_AIRAC_Dir(), "fixpoints");
             char[] delimiterChars = { ';' };
             StreamReader MyStreamReader;
-            DateTime StartTime = DateTime.UtcNow;
+
             if (File.Exists(FileName))
             {
                 // Lets read in settings from the file

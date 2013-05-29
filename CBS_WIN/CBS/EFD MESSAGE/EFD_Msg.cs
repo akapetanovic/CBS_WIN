@@ -116,7 +116,7 @@ namespace CBS
                                     LON_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.E;
 
                                 WPT.Name = Words[2];
-                                WPT.Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(LAT_DEG, LAT_MIN, LAT_SEC, LAT_Prefix, LON_DEG, LON_MIN, LAT_SEC, LON_Prefix);
+                                WPT.Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(LAT_DEG, LAT_MIN, LAT_SEC, LAT_Prefix, LON_DEG, LON_MIN, LON_SEC, LON_Prefix);
                                 WPT.Position_Determined = true;
                                 GEO_Artifical_List.Add(WPT);
                             }
@@ -221,7 +221,9 @@ namespace CBS
                                             }
                                             else
                                             {
-                                                // Lets check if the point 
+                                                // Lets check if the point is in the artifical EFD message
+                                                // provided list. If so extract the position and assign it to
+                                                // the main trajectory WPT list
                                                 foreach (Waypoint GEO_WPT in GEO_Artifical_List)
                                                 {
                                                     if (WPT.Name == GEO_WPT.Name)
@@ -255,10 +257,19 @@ namespace CBS
             // 2. Determine Lon/Lat of each -VEC point
             ParseTrajectoryList(ref TrajectoryPoints);
 
+            // Iterate through the sector lists and
+            // calculate sector entry/exit levels based on the
+            // extrapolation data calculated from the main trajectory
+            // WPT list
+            CalculateSectorEntry_Exit_Times(ref Sector_List);
+
             /////////////////////////////////
             // Now set AOI Entry/Exit Points
             if (TrajectoryPoints.Count > 1)
             {
+                // AOI_ENTRY_TIME
+                // AOI_EXIT_TIME
+                
                 ENTRY_AOI_POINT = TrajectoryPoints[0].Position;
                 AOI_ENTRY_FL = TrajectoryPoints[0].Flight_Level;
                 EXIT_AOI_POINT = TrajectoryPoints[TrajectoryPoints.Count - 1].Position;
@@ -267,6 +278,83 @@ namespace CBS
 
             Reader.Close();
             Reader.Dispose();
+        }
+
+        // This method is to be called once Sector and Trajectory
+        // lists are populated (upon comleting EFD message extraction)
+        public void CalculateSectorEntry_Exit_Times(ref List<Sector> Sector_List)
+        {
+            // Loop through the sector list and calculate
+            // entry/exit levels
+            for (int i = 0; i < Sector_List.Count; i++)
+            {
+                // First take care of the sector entry FL
+                int Start_Index = 0;
+                int End_Index = 0;
+                bool Start_End_WPT_Search_Status = false;
+
+                int Start_FL;
+                int End_FL;
+                int FL_DIFFERENCE;
+                TimeSpan Start_To_Sector;
+                TimeSpan Start_To_End;
+                double Time_Factor;
+                double Sector_Crossing_FL;
+
+                // Get indexes of WPT before and after sector crossing border
+                Get_Start_End_WPT_Index(Sector_List[i].SECTOR_ENTRY_TIME, out Start_Index, out End_Index, out Start_End_WPT_Search_Status);
+                if (Start_End_WPT_Search_Status == true)
+                {
+                    Start_FL = int.Parse(TrajectoryPoints[Start_Index].Flight_Level);
+                    End_FL = int.Parse(TrajectoryPoints[End_Index].Flight_Level);
+                    FL_DIFFERENCE = End_FL - Start_FL;
+
+                    Start_To_Sector = Sector_List[i].SECTOR_ENTRY_TIME - CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[Start_Index].ETO);
+                    Start_To_End = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[End_Index].ETO) - CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[Start_Index].ETO);
+                    Time_Factor = Start_To_Sector.TotalSeconds / Start_To_End.TotalSeconds;
+                    Sector_Crossing_FL = Start_FL + (FL_DIFFERENCE * Time_Factor);
+                    Sector_List[i].EFL = Math.Round(Sector_Crossing_FL).ToString();
+                }
+
+                // Now calculate sector exit FL
+                // Get indexes of WPT before and after sector crossing border
+                Get_Start_End_WPT_Index(Sector_List[i].SECTOR_EXIT_TIME, out Start_Index, out End_Index, out Start_End_WPT_Search_Status);
+                if (Start_End_WPT_Search_Status == true)
+                {
+                    Start_FL = int.Parse(TrajectoryPoints[Start_Index].Flight_Level);
+                    End_FL = int.Parse(TrajectoryPoints[End_Index].Flight_Level);
+                    FL_DIFFERENCE = End_FL - Start_FL;
+
+                    Start_To_Sector = Sector_List[i].SECTOR_EXIT_TIME - CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[Start_Index].ETO);
+                    Start_To_End = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[End_Index].ETO) - CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[Start_Index].ETO);
+                    Time_Factor = Start_To_Sector.TotalSeconds / Start_To_End.TotalSeconds;
+                    Sector_Crossing_FL = Start_FL + (FL_DIFFERENCE * Time_Factor);
+                    Sector_List[i].XFL = Math.Round(Sector_Crossing_FL).ToString();
+                }
+            }
+        }
+
+        // This method returns the indexes of the two WPT points (before and after) given time.
+        // Intended use is to obtain points before and after expected sector crossing. The points
+        // have expected FL and times and based on that it is possible to calculate sector crossing FL
+        private void Get_Start_End_WPT_Index(DateTime TimeAtPoint, out int Start, out int End, out bool Succefull)
+        {
+            Start = 0;
+            End = 0;
+            Succefull = false;
+            for (int i = 0; i < TrajectoryPoints.Count; i++)
+            {
+                TimeSpan Time = CBS_Main.GetDate_Time_From_YYYYMMDDHHMMSS("20" + TrajectoryPoints[i].ETO) - TimeAtPoint;
+                if (Time.TotalSeconds > 0)
+                {
+                    Start = i - 1;
+                    End = i;
+                    Succefull = true;
+                    break;
+                }
+            }
+
+
         }
 
         // 1. Remove all "-VEC points from the end of the list
