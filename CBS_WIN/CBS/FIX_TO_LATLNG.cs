@@ -31,7 +31,7 @@ namespace CBS
             {
                 // Lets read in settings from the file
                 MyStreamReader = System.IO.File.OpenText(FileName);
-               
+
                 while (MyStreamReader.Peek() >= 0)
                 {
                     FIXPOINT_Data = MyStreamReader.ReadLine();

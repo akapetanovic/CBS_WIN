@@ -37,6 +37,7 @@ namespace CBS
             public string XFL = "N/A";
         }
         public List<Sector> Sector_List = new List<Sector>();
+        public List<Waypoint> GEO_Artifical_List = new List<Waypoint>();
 
 
         // These are calculated data
@@ -50,7 +51,6 @@ namespace CBS
         public string AOI_EXIT_FL = "N/A";
         public List<Waypoint> TrajectoryPoints = new List<Waypoint>();
 
-
         public EFD_Msg(StreamReader Reader)
         {
             string OneLine;
@@ -61,6 +61,7 @@ namespace CBS
             {
                 OneLine = Reader.ReadLine();
                 string[] Words = OneLine.Split(delimiterChars);
+                Waypoint WPT = new Waypoint();
 
                 try
                 {
@@ -89,6 +90,40 @@ namespace CBS
                             break;
                         case "-EOBD":
                             EOBD = Words[1];
+                            break;
+                        case "-GEO":
+                            try
+                            {
+                                string LAT = Words[4];
+                                string LON = Words[6];
+                                // -LATTD 550302N -LONGTD 1070037W
+                                int LAT_DEG = int.Parse(LAT.Substring(0, 2));
+                                int LAT_MIN = int.Parse(LAT.Substring(2, 2));
+                                int LAT_SEC = int.Parse(LAT.Substring(4, 2));
+                                GeoCordSystemDegMinSecUtilities.LatLongPrefix LAT_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.Not_Valid;
+                                if (LAT[6] == 'N')
+                                    LAT_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.N;
+                                else
+                                    LAT_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.S;
+
+                                int LON_DEG = int.Parse(LON.Substring(0, 3));
+                                int LON_MIN = int.Parse(LON.Substring(3, 2));
+                                int LON_SEC = int.Parse(LON.Substring(5, 2));
+                                GeoCordSystemDegMinSecUtilities.LatLongPrefix LON_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.Not_Valid;
+                                if (LON[7] == 'W')
+                                    LON_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.W;
+                                else
+                                    LON_Prefix = GeoCordSystemDegMinSecUtilities.LatLongPrefix.E;
+
+                                WPT.Name = Words[2];
+                                WPT.Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(LAT_DEG, LAT_MIN, LAT_SEC, LAT_Prefix, LON_DEG, LON_MIN, LAT_SEC, LON_Prefix);
+                                WPT.Position_Determined = true;
+                                GEO_Artifical_List.Add(WPT);
+                            }
+                            catch (Exception e)
+                            {
+                                CBS_Main.WriteToLogFile("Exception in EFD_Msg.cs, -GEP Parsing: " + e.Message);
+                            }
                             break;
                         case "-BEGIN":
                             if (Words[1] == "RTEPTS")
@@ -136,11 +171,10 @@ namespace CBS
                                     }
                                 }
                             }
-                            else
+                            else if (Words.Length > 1)
                             {
                                 if (Words[1] == "-AD" || Words[1] == "-VEC" || Words[1] == "-PT")
                                 {
-                                    Waypoint WPT = new Waypoint();
                                     FIX_TO_LATLNG.FIXPOINT_TYPE FIX = new FIX_TO_LATLNG.FIXPOINT_TYPE();
 
                                     switch (Words[1])
@@ -185,7 +219,20 @@ namespace CBS
                                                 // as defined in the fixpoint table.
                                                 TrajectoryPoints.Add(WPT);
                                             }
-
+                                            else
+                                            {
+                                                // Lets check if the point 
+                                                foreach (Waypoint GEO_WPT in GEO_Artifical_List)
+                                                {
+                                                    if (WPT.Name == GEO_WPT.Name)
+                                                    {
+                                                        WPT.Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(GEO_WPT.Position.GetLatLongDecimal().LatitudeDecimal, GEO_WPT.Position.GetLatLongDecimal().LongitudeDecimal);
+                                                        WPT.Position_Determined = true;
+                                                        TrajectoryPoints.Add(WPT);
+                                                        break;
+                                                    }
+                                                }
+                                            }
                                             break;
                                         default:
                                             break;
@@ -197,9 +244,9 @@ namespace CBS
                             break;
                     }
                 }
-                catch
+                catch (Exception e)
                 {
-                    CBS_Main.WriteToLogFile("Exception in EFD_Msg.cs, Instantiation");
+                    CBS_Main.WriteToLogFile("Exception in EFD_Msg.cs, Instantiation: " + e.Message);
                 }
             }
 
@@ -233,8 +280,8 @@ namespace CBS
             for (int i = 0; i < T_List.Count; i++)
             {
                 if (T_List[i].Name.Length == 6 && T_List[i].Name.Substring(0, 4) == "-VEC")
-                { 
-                
+                {
+
                 }
                 else
                 {
@@ -284,7 +331,7 @@ namespace CBS
                     distance = (distance / 100.0) * (double)percentage;
                     distance = 0.00053996 * distance;
                     ////////////////////////////////////////////////////////////
-                    
+
                     // Calculate the azimuth between two known points
                     Angle Azimuth = geoCalc.CalculateGeodeticMeasurement(reference, Start_Pos, End_Pos).Azimuth;
 
@@ -293,7 +340,7 @@ namespace CBS
                     GeoCordSystemDegMinSecUtilities.CalculateNewPosition(new GeoCordSystemDegMinSecUtilities.LatLongClass(Start_Pos.Latitude.Degrees, Start_Pos.Longitude.Degrees), distance, Azimuth.Degrees);
 
                     // Assign new position to the -VEC point
-                    T_List[i].Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(New_Position.GetLatLongDecimal().LatitudeDecimal, New_Position.GetLatLongDecimal().LongitudeDecimal);      
+                    T_List[i].Position = new GeoCordSystemDegMinSecUtilities.LatLongClass(New_Position.GetLatLongDecimal().LatitudeDecimal, New_Position.GetLatLongDecimal().LongitudeDecimal);
                 }
                 else
                 {
