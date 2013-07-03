@@ -37,14 +37,14 @@ namespace CBS
         // POINTS        
         public static void Write_One_Message(EFD_Msg Message)
         {
-            //// Lets build SEQMUAC string
-            //// FORMAT:
-            //// //RH1,1515,1522//RH2,1515,1522
-            //string SEQMUAC = "";
-            //foreach (EFD_Msg.Sector Msg in Message.Sector_List)
-            //{
-            //    SEQMUAC = SEQMUAC + "//" + Msg.ID + ',' + GetTimeAS_HHMM(Msg.SECTOR_ENTRY_TIME) + ',' + GetTimeAS_HHMM(Msg.SECTOR_EXIT_TIME) + ',' + Msg.EFL + ',' + Msg.XFL;
-            //}
+            // Lets build SEQMUAC string
+            // FORMAT:
+            // //RH1,1515,1522//RH2,1515,1522
+            string SEQMUAC = "";
+            foreach (EFD_Msg.Sector Msg in Message.Sector_List)
+            {
+                SEQMUAC = SEQMUAC + "//" + Msg.ID + ',' + GetTimeAS_HHMM(Msg.SECTOR_ENTRY_TIME) + ',' + GetTimeAS_HHMM(Msg.SECTOR_EXIT_TIME) + ',' + Msg.EFL + ',' + Msg.XFL;
+            }
 
             // Lets build TPOINTS string
             //tpoints (LON,LAT,FL,broj sekundi u odnosu na tstarttime) u formatu:
@@ -75,7 +75,7 @@ namespace CBS
             string TENDTIME = ConvertToUNIXTimestamp(CBS_Main.GetDate_Time_From_YYMMDDHHMMSS(Message.TrajectoryPoints[Message.TrajectoryPoints.Count - 1].ETO)).ToString();
             
             string query = "INSERT INTO " + MySQLConnetionString.table_name +
-                " (IFPLID, ARCID, FLTSTATE, ADEP, ADES, ARCTYP, ETI, XTI, LASTUPD, TSTARTTIME, TENDTIME, TPOINTS) " +
+                " (IFPLID, ARCID, FLTSTATE, ADEP, ADES, ARCTYP, ETI, XTI, LASTUPD, TSTARTTIME, TENDTIME, TPOINTS, ENTRIES) " +
                 " VALUES ("  + Get_With_Quitation(Message.IFPLID) + "," +
                              Get_With_Quitation(Message.ACID) + "," +
                              Get_With_Quitation(Message.FLTSTATE) + "," +
@@ -87,7 +87,8 @@ namespace CBS
                              Get_With_Quitation(LASTUPD) + "," +
                              Get_With_Quitation(TSTARTTIME) + "," +
                              Get_With_Quitation(TENDTIME) + "," +
-                             Get_With_Quitation(TPOINTS) + ")";
+                             Get_With_Quitation(TPOINTS) + "," +
+                             Get_With_Quitation(SEQMUAC) + ")";
 
             
             

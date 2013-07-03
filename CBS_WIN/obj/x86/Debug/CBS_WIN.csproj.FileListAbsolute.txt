@@ -20,3 +20,7 @@ C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.write.1.tlog
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.exe.manifest
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.application
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe.manifest
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.application
