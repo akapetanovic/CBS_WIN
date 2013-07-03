@@ -9,6 +9,8 @@ C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debu
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\Google.KML.dll
 C:\Users\CAAS\documents\visual studio 2010\Projects\CBS_WIN\CBS_WIN\bin\Debug\SharpKml.dll
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.exe.manifest
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.application
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.exe
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.pdb
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\Google.KML.dll
@@ -18,9 +20,7 @@ C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.MAIN.reso
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.Properties.Resources.resources
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.read.1.tlog
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\GenerateResource.write.1.tlog
-C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe
-C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
-C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.exe.manifest
-C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\bin\Debug\CBS_WIN.application
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe.manifest
 C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.application
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.exe
+C:\Users\AMER\Documents\Projects\CBS_WIN\CBS_WIN\obj\x86\Debug\CBS_WIN.pdb
