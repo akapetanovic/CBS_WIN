@@ -59,8 +59,8 @@ namespace CBS
                 {
                     TS = CBS_Main.GetDate_Time_From_YYMMDDHHMMSS(WPT.ETO) - CBS_Main.GetDate_Time_From_YYMMDDHHMMSS(Message.TrajectoryPoints[0].ETO);
                 }
-               
-                TPOINTS = TPOINTS + string.Format("{0:0.0000}", WPT.Position.GetLatLongDecimal().LongitudeDecimal) + ',' + string.Format("{0:0.0000}", WPT.Position.GetLatLongDecimal().LatitudeDecimal)
+
+                TPOINTS = TPOINTS + string.Format("{0:0.0000}", WPT.Position.GetLatLongDecimal().LatitudeDecimal) + ',' + string.Format("{0:0.0000}", WPT.Position.GetLatLongDecimal().LongitudeDecimal)
                     + ',' + WPT.Flight_Level + ',' + TS.TotalSeconds.ToString() + ";";
 
                 Index++;
