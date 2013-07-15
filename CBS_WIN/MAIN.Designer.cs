@@ -112,7 +112,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnDebug);
             this.Name = "MAIN";
-            this.Text = "EFD 1.6";
+            this.Text = "EFD 1.7";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MAIN_FormClosing);
             this.Load += new System.EventHandler(this.MAIN_Load);
             this.ResumeLayout(false);

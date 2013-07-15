@@ -29,7 +29,7 @@ namespace CBS
         private static string Tmp_Directory =  @"C:\tmp";
 
         // Common
-        private static string HEART_BEAT = "" + DateTime.UtcNow.Year + DateTime.UtcNow.Month + DateTime.UtcNow.Day + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second;
+        private static string HEART_BEAT = "" + DateTime.UtcNow.Year.ToString("0000") + DateTime.UtcNow.Month.ToString("00") + DateTime.UtcNow.Day.ToString("00") + DateTime.UtcNow.Hour.ToString("00") + DateTime.UtcNow.Minute.ToString("00") + DateTime.UtcNow.Second.ToString("00");
 
         // Timer used to periodically save off last time application was alive
         private static System.Timers.Timer Cold_Start_Timer;
